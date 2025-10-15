@@ -10,21 +10,18 @@ import (
 	"time"
 )
 
-// Rate representa a cotação retornada pela API
 type Rate struct {
 	Symbol string  `json:"symbol"`
 	Price  float64 `json:"price"`
 	Source string  `json:"source"`
 }
 
-// AggregatedRate representa a média das cotações
 type AggregatedRate struct {
 	Symbol   string  `json:"symbol"`
 	Average  float64 `json:"average"`
 	Received int     `json:"sources"`
 }
 
-// fetchRate simula busca de cotação em uma API externa
 func fetchRate(ctx context.Context, symbol, source, url string, ch chan<- Rate, wg *sync.WaitGroup) {
 	defer wg.Done()
 
@@ -42,7 +39,6 @@ func fetchRate(ctx context.Context, symbol, source, url string, ch chan<- Rate, 
 		return
 	}
 
-	// Exemplo simples — adaptar conforme formato da API real
 	price, ok := result["bid"].(string)
 	if !ok {
 		return
@@ -53,7 +49,6 @@ func fetchRate(ctx context.Context, symbol, source, url string, ch chan<- Rate, 
 	ch <- Rate{Symbol: symbol, Price: value, Source: source}
 }
 
-// getAggregatedRate consulta múltiplas fontes em paralelo
 func getAggregatedRate(symbol string) AggregatedRate {
 	sources := map[string]string{
 		"awesomeapi": fmt.Sprintf("https://economia.awesomeapi.com.br/json/last/%s-BRL", symbol),
