@@ -28,14 +28,14 @@ func fetchRate(ctx context.Context, symbol, source, url string, ch chan<- Rate, 
 	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Printf("erro na fonte %s: %v", source, err)
+		log.Printf("error in source %s: %v", source, err)
 		return
 	}
 	defer resp.Body.Close()
 
 	var result map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		log.Printf("erro ao decodificar resposta: %v", err)
+		log.Printf("error to decode response: %v", err)
 		return
 	}
 
@@ -89,7 +89,7 @@ func getAggregatedRate(symbol string) AggregatedRate {
 func handler(w http.ResponseWriter, r *http.Request) {
 	symbol := r.URL.Query().Get("symbol")
 	if symbol == "" {
-		http.Error(w, "parametro 'symbol' obrigatorio", http.StatusBadRequest)
+		http.Error(w, "param 'symbol' required", http.StatusBadRequest)
 		return
 	}
 
